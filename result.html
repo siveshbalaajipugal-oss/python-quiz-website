@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Your Result | QuizLab{% endblock %}
+{% block content %}
+<section class="result-wrap">
+  <div class="result-card">
+    <div class="result-icon">{{ "🏆" if percentage >= 80 else "🎯" if percentage >= 50 else "📘" }}</div>
+    <div class="eyebrow">QUIZ COMPLETED</div>
+    <h1>Well done, {{ student_name }}!</h1>
+    <p>Your result has been saved to the quiz records.</p>
+    <div class="score-circle"><strong>{{ percentage }}%</strong><span>YOUR SCORE</span></div>
+    <div class="score-line"><span>Correct answers</span><b>{{ score }} / {{ total }}</b></div>
+    <div class="score-line"><span>Performance</span><b>{{ "Excellent" if percentage >= 80 else "Good effort" if percentage >= 50 else "Keep practising" }}</b></div>
+    <div class="result-actions"><a class="button primary" href="{{ url_for('index') }}">Try again</a><a class="button secondary" href="{{ url_for('results') }}">View analysis</a></div>
+  </div>
+  <div class="review-panel">
+    <div class="eyebrow">ANSWER REVIEW</div><h2>Check your answers</h2>
+    {% for item in review %}
+    <div class="review-item">
+      <span class="review-status {{ 'good' if item.correct else 'bad' }}">{{ "✓" if item.correct else "×" }}</span>
+      <div><b>{{ item.question }}</b><p>Your answer: {{ item.selected }}</p>{% if not item.correct %}<small>Correct answer: {{ item.correct_answer }}</small>{% endif %}</div>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

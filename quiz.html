@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Take Quiz | QuizLab{% endblock %}
+{% block content %}
+<div class="quiz-heading">
+  <div><div class="eyebrow">PYTHON KNOWLEDGE CHECK</div><h1>Let's get started, {{ student_name }}.</h1><p>Choose one answer for each question. Your progress is saved when you submit.</p></div>
+  <div class="question-count">05 <span>QUESTIONS</span></div>
+</div>
+<form method="POST" class="quiz-form" id="quizForm">
+  {% for q in questions %}
+  {% set question_index = loop.index0 %}
+  <section class="question-card">
+    <div class="question-meta"><span>QUESTION {{ loop.index }}</span><span>{{ loop.index }} / {{ questions|length }}</span></div>
+    <h2>{{ q.question }}</h2>
+    <div class="options">
+      {% for option in q.options %}
+      <label class="option">
+        <input type="radio" name="answer_{{ question_index }}" value="{{ option }}">
+        <span class="option-letter">{{ "ABCD"[loop.index0] }}</span>
+        <span>{{ option }}</span>
+        <span class="option-check">✓</span>
+      </label>
+      {% endfor %}
+    </div>
+  </section>
+  {% endfor %}
+  <div class="submit-row"><span>Make sure you have selected an answer for each question.</span><button class="button primary" type="submit">Submit quiz →</button></div>
+</form>
+{% endblock %}
