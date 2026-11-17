@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Results & Analysis | QuizLab{% endblock %}
+{% block content %}
+<div class="page-heading"><div class="eyebrow">PERFORMANCE DASHBOARD</div><h1>Results & analysis</h1><p>All quiz attempts are stored in a CSV file and analysed using Pandas.</p></div>
+<section class="stats-grid dashboard-stats">
+  <div class="stat-card"><span>Total attempts</span><strong>{{ stats.attempts }}</strong><small>Recorded submissions</small></div>
+  <div class="stat-card"><span>Average percentage</span><strong>{{ stats.average }}%</strong><small>Mean performance</small></div>
+  <div class="stat-card"><span>Highest score</span><strong>{{ stats.highest }}<em>/5</em></strong><small>Top score</small></div>
+  <div class="stat-card"><span>Top student</span><strong class="top-student">{{ stats.top_student }}</strong><small>Highest-scoring attempt</small></div>
+</section>
+{% if records %}
+<section class="charts-grid">
+  <div class="chart-card"><div class="chart-title"><div><span class="eyebrow">SCORE OVERVIEW</span><h2>Score distribution</h2></div></div><canvas id="scoreChart"></canvas></div>
+  <div class="chart-card"><div class="chart-title"><div><span class="eyebrow">STUDENT COMPARISON</span><h2>Student performance</h2></div></div><canvas id="performanceChart"></canvas></div>
+</section>
+<section class="table-card">
+  <div class="table-heading"><div><span class="eyebrow">CSV RECORDS</span><h2>All student results</h2></div><span class="record-count">{{ records|length }} records</span></div>
+  <div class="table-scroll"><table><thead><tr><th>Student name</th><th>Score</th><th>Total</th><th>Percentage</th></tr></thead><tbody>
+  {% for row in records %}<tr><td>{{ row["Student Name"] }}</td><td>{{ row["Score"] }}</td><td>{{ row["Total"] }}</td><td><span class="percentage-pill">{{ "%.1f"|format(row["Percentage"]|float) }}%</span></td></tr>{% endfor %}
+  </tbody></table></div>
+</section>
+<script>
+const names = {{ chart_data.names|tojson }};
+const scores = {{ chart_data.scores|tojson }};
+const percentages = {{ chart_data.percentages|tojson }};
+const scoreCounts = [0,1,2,3,4,5].map(n => scores.filter(s => s === n).length);
+new Chart(document.getElementById('scoreChart'), {
+  type: 'bar',
+  data: { labels: ['0','1','2','3','4','5'], datasets: [{ label: 'Students', data: scoreCounts, backgroundColor: '#7c6cf2', borderRadius: 7, maxBarThickness: 38 }] },
+  options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { precision: 0 } }, x: { title: { display: true, text: 'Score out of 5' } } } }
+});
+new Chart(document.getElementById('performanceChart'), {
+  type: 'bar',
+  data: { labels: names, datasets: [{ label: 'Percentage', data: percentages, backgroundColor: '#35b8a1', borderRadius: 7, maxBarThickness: 38 }] },
+  options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, max: 100, ticks: { callback: v => v + '%' } } } }
+});
+</script>
+{% else %}
+<div class="empty-state"><div>📊</div><h2>No results yet</h2><p>Complete the quiz once to see the result table and charts here.</p><a class="button primary" href="{{ url_for('index') }}">Take the first quiz →</a></div>
+{% endif %}
+{% endblock %}

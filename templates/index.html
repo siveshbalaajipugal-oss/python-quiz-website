@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Home | QuizLab{% endblock %}
+{% block content %}
+<section class="hero">
+  <div class="hero-copy">
+    <div class="eyebrow">LEARN · PRACTICE · IMPROVE</div>
+    <h1>Test your Python<br><span>knowledge.</span></h1>
+    <p>Take a quick quiz, check your score, and explore student performance through simple result analytics.</p>
+    <form class="start-form" action="{{ url_for('start_quiz') }}" method="POST">
+      <label for="student_name">Student name</label>
+      <div class="start-row">
+        <input id="student_name" name="student_name" placeholder="Enter your name" maxlength="60" required>
+        <button class="button primary" type="submit">Start quiz <span>→</span></button>
+      </div>
+    </form>
+    <div class="hero-note"><span class="dot"></span> 5 questions · Multiple choice · Randomized every attempt</div>
+  </div>
+  <div class="hero-art">
+    <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>
+    <div class="quiz-card">
+      <div class="card-top"><span>PYTHON QUIZ</span><span class="live-dot"></span></div>
+      <div class="code-mark">&lt;/&gt;</div>
+      <div class="fake-line wide"></div><div class="fake-line medium"></div>
+      <div class="fake-options"><i></i><i></i><i></i><i></i></div>
+      <div class="progress-label"><span>YOUR NEXT CHALLENGE</span><b>01 / 05</b></div>
+      <div class="progress-track"><span></span></div>
+    </div>
+    <div class="floating-badge">✦ &nbsp; Think. Choose. Learn.</div>
+  </div>
+</section>
+<section class="stats-grid">
+  <div class="stat-card"><span>Total attempts</span><strong>{{ stats.attempts }}</strong><small>Quiz submissions</small></div>
+  <div class="stat-card"><span>Average percentage</span><strong>{{ stats.average }}%</strong><small>Across all attempts</small></div>
+  <div class="stat-card"><span>Highest score</span><strong>{{ stats.highest }}<em>/5</em></strong><small>Best result</small></div>
+  <div class="stat-card"><span>Lowest score</span><strong>{{ stats.lowest }}<em>/5</em></strong><small>Recorded result</small></div>
+</section>
+<section class="bottom-callout">
+  <div><span class="eyebrow">TRACK YOUR PROGRESS</span><h2>Every attempt tells a story.</h2><p>View saved scores, average performance, and charts on the analysis page.</p></div>
+  <a class="button secondary" href="{{ url_for('results') }}">View analysis →</a>
+</section>
+{% endblock %}
